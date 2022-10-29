@@ -8,7 +8,18 @@ using BepInEx;
 using BepInEx.Core;
 using HarmonyLib;
 using UnityEngine;
-
+/******************************
+ * Some Note Here
+ * ****************************
+ * 
+ * 1. Use DummyUIControl to get Damage Value.(2022/10/19) Not Done.
+ * 
+ * 2. Use UnityEditor to Make a New Buff Property Window instead of IMGUI.(2022/10/19) Not Done.
+ * 
+ * 3. Fix Weapon Support. Not Done.
+ * 3. Add a Support that can Change Weapon Effects.(2022/10/19) Not Done.
+ * 
+ */
 
 namespace TestBench
 {
