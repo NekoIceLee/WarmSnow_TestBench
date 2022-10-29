@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace TestBench
 {
-    [BepInPlugin("com.nekoice.plugin.testbench", "TestBench", "1.0.0")]
+    [BepInPlugin("com.nekoice.plugin.testbench", "TestBench", "2.0.0")]
     public class TestBench : BaseUnityPlugin
     {
         private Rect mwdnd = new Rect(500, 300, 200, 450);
