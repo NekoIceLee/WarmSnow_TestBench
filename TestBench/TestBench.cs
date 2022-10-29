@@ -248,50 +248,6 @@ namespace TestBench
                 if (GUI.Button(r, "红魂")) { }//PlayerAnimControl.instance.RedSouls = redsoul;
 
                 r.Set(5, 250, 190, 30);
-                if (GUI.Button(r, "生成木桩 (X)") || Input.GetKeyDown(KeyCode.X))
-                {
-                    if (hasgen && sb != null)
-                    {
-                        UnityEngine.Object.Destroy(sb);
-                    }
-                    Vector3 v3 = PlayerAnimControl.instance.transform.position + new Vector3(0f, +2f, 0f);
-                    //GameObject item = MonstersControl.instance.MonsterDynamicInstantiate(sbid, PlayerAnimControl.instance.transform, false);
-                    GameObject item = UnityEngine.Object.Instantiate<GameObject>(MonstersControl.instance.EnemyObject[sbid], v3, Quaternion.identity); 
-                    sb = item;
-                    item.GetComponent<EnemyControl>().canBeMove = false;
-                    item.GetComponent<EnemyControl>().isStun = true;
-                    item.GetComponent<EnemyControl>().isNoGenBloodFleshMonster = true;
-                    if (mwdnd.x > Screen.width / 2)
-                    {
-                        bfuiwnd.x = mwdnd.x - msuiwnd.width;
-                    }
-                    else
-                    {
-                        bfuiwnd.x = mwdnd.xMax;
-                    }
-                    bfuiwnd.y = mwdnd.y;
-
-                    StartCoroutine(setinit());
-                    hasgen = true;
-                    afterdeath = false;
-                }
-                r.Set(5, 280, 190, 30);
-                if (GUI.Button(r, "移除木桩 (C)") || Input.GetKeyDown(KeyCode.C))
-                {
-                    if (hasgen)
-                    {
-                        UnityEngine.Object.Destroy(sb);
-                        sb = null;
-                        hasgen = false;
-                        afterdeath = false;
-
-                        maxdpf = 0; maxdps025 = 0; maxdps1 = 0; maxdps5 = 0;
-                        tempdps025 = 0; tempdps1 = 0; tempdps5 = 0; dpf = 0;
-                        dps025 = 0; dps1 = 0; dps5 = 0;
-                        dpstimer025 = 0; dpstimer1 = 0; dpstimer5 = 0;
-                    }
-                }
-                r.Set(5, 315, 190, 30);
                 if (GUI.Button(r, "清除小怪 (Z)") || Input.GetKeyDown(KeyCode.Z))
                 {
                     KillAllPool.instance.Pop().transform.position = PlayerAnimControl.instance.transform.position;
@@ -347,20 +303,6 @@ namespace TestBench
                 msuion = false;
             }
             GUI.DragWindow();
-        }
-
-        IEnumerator setinit()
-        {
-            yield return new WaitForSeconds(1f);
-
-            sb.GetComponent<EnemyControl>().enemyParameter.MAX_HP = 16777215f;
-            sb.GetComponent<EnemyControl>().enemyParameter.EXTRA_DEFENSE = 0f;
-            yield return new WaitForSeconds(0.1f);
-            maxdpf = 0;maxdps025 = 0; maxdps1 = 0; maxdps5 = 0;
-            tempdps025 = 0;tempdps1 = 0;tempdps5 = 0;dpf = 0;
-            dps025 = 0;dps1 = 0;dps5 = 0;
-            dpstimer025 = 0;dpstimer1 = 0;dpstimer5 = 0;
-            yield break;
         }
 
     }
