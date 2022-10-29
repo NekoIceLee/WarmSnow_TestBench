@@ -75,104 +75,36 @@ namespace TestBench
 
         void Update()
         {
-            if (PlayerAnimControl.instance == null) { sb = null; hasgen = false; afterdeath = false; }
-            if (hasgen && sb != null)
+            if (PlayerAnimControl.instance != null && MenuSkillLearn.instance != null)
             {
-                GlobalParameter.instance.diff_fishTailTimer = 0;
-
-                EnemyControl ec = sb.GetComponent<EnemyControl>();
-                ec.specialDiffTimer = 0;
-                ec.specialDotDiffTimer = 0;
-                ec.isStun = true;
-                if (!ec.isDeath)
+                if (true)
                 {
-                    dpf = ec.enemyParameter.MAX_HP - ec.enemyParameter.HP;
-                    dpstimer025 += Time.deltaTime;
-                    dpstimer1 += Time.deltaTime;
-                    dpstimer5 += Time.deltaTime;
-                    tempdps025 += dpf;
-                    tempdps1 += dpf;
-                    tempdps5 += dpf;
-                    ec.enemyParameter.HP = ec.enemyParameter.MAX_HP;
-                }
-                else
-                {
-                    sb = null;
-                    maxdpf = 16777216;
-                    afterdeath = true;
-                }
-
-                
-                
-                if (dpf > maxdpf)
-                {
-                    maxdpf = dpf;
-                }
-
-                
-                if (dpstimer025 > 0.25)
-                {
-                    dpstimer025 = 0;
-                    dps025 = tempdps025;
-                    dps025 *= 4f;
-                    tempdps025 = 0;
-                    if (dps025 > maxdps025)
+                    MenuSkillLearn.instance.hasSkillRandom = false;
+                    if (MenuSkillLearn.instance.isOn)
                     {
-                        maxdps025 = dps025;
+                        MenuSkillLearn.instance.refineButton.alpha = 1f;
+                        MenuSkillLearn.instance.refineButton.blocksRaycasts = true;
                     }
                 }
-                if (dpstimer1 > 1)
-                {
-                    dpstimer1 = 0;
-                    dps1 = tempdps1;
-                    tempdps1 = 0;
-                    if (dps1 > maxdps1)
-                    {
-                        maxdps1 = dps1;
-                    }
-                }
-                if (dpstimer5 > 5)
-                {
-                    dpstimer5 = 0;
-                    dps5 = tempdps5;
-                    dps5 *= 0.2f;
-                    tempdps5 = 0;
-                    if (dps5 > maxdps5)
-                    {
-                        maxdps5 = dps5;
-                    }
-                }
-                if (PlayerAnimControl.instance != null && MenuSkillLearn.instance != null)
-                {
-                    if (true)
-                    {
-                        MenuSkillLearn.instance.hasSkillRandom = false;
-                        if (MenuSkillLearn.instance.isOn)
-                        {
-                            MenuSkillLearn.instance.refineButton.alpha = 1f;
-                            MenuSkillLearn.instance.refineButton.blocksRaycasts = true;
-                        }
-                    }
-                }
-
             }
+
         }
 
         void OnGUI()
         {
-            mwdnd = GUI.Window(4444, mwdnd, TestBenchWindow, "测试台");
+            mwdnd = GUI.Window("测试台".GetHashCode(), mwdnd, TestBenchWindow, "测试台");
             if (psuion)
             {
-                psuiwnd = GUI.Window(4445, psuiwnd, potionselectwindow, "圣物");
+                psuiwnd = GUI.Window("圣物".GetHashCode(), psuiwnd, potionselectwindow, "圣物");
             }
             if (msuion)
             {
-                msuiwnd = GUI.Window(4446, msuiwnd, msselectwindow, "武器");
+                msuiwnd = GUI.Window("武器".GetHashCode(), msuiwnd, msselectwindow, "武器");
             }
             if (hasgen || afterdeath)
             {
                 
-                bfuiwnd = GUI.Window(4447, bfuiwnd, sandbagbufflist, "木桩");
+                bfuiwnd = GUI.Window("木桩".GetHashCode(), bfuiwnd, sandbagbufflist, "木桩");
             }
             if (Input.GetKey(KeyCode.L))
             {
