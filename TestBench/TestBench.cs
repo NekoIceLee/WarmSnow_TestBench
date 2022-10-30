@@ -32,8 +32,18 @@ namespace TestBench
         Rect psuiwnd = new Rect(0, 0, 500, 400);
         Rect msuiwnd = new Rect(0, 0, 500, 500);
         Rect bfuiwnd = new Rect(0, 0, 400, 400);
-
-        GUIStyle labelStyle = new GUIStyle();
+        GUIStyle LabelStyle { get; } = new GUIStyle()
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fontStyle = FontStyle.Normal,
+            font = null,
+            margin = new RectOffset(10, 10, 10, 10),
+            fontSize = 16,
+            normal = new GUIStyleState
+            {
+                textColor = Color.white,
+            },
+        };
         private int PotionID { get; set; } = 1;
         private int PotionLevel { get; set; } = 2;
         private int MagicSwordID { get; set; } = 1;
@@ -48,12 +58,7 @@ namespace TestBench
         bool HasDummy => DummyObject != null;
         void Start()
         {
-            labelStyle.alignment = TextAnchor.MiddleCenter;
-            labelStyle.normal.textColor = Color.white;
-            labelStyle.fontStyle = FontStyle.Normal;
-            labelStyle.font = null;
-            labelStyle.margin = new RectOffset(10, 10, 10, 10);
-            labelStyle.fontSize = 16;
+            
             SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         }
 
@@ -72,7 +77,6 @@ namespace TestBench
                 }
             }
         }
-
         private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
         {
             GameObject Dummy = GameObject.Find("Dummy");
@@ -103,12 +107,12 @@ namespace TestBench
         {
             Rect r = new Rect(5, 20, bfuiwnd.width - 10, 25);
             Rect r2 = new Rect(r.x, r.y, r.width/2, r.height);
-            GUI.Label(r2, "BUFF类型", labelStyle);
+            GUI.Label(r2, "BUFF类型", LabelStyle);
             r2.x += r2.width;
             r2.width *= 0.5f;
-            GUI.Label(r2, "值/层数", labelStyle);
+            GUI.Label(r2, "值/层数", LabelStyle);
             r2.x += r2.width;
-            GUI.Label(r2, "时间", labelStyle);
+            GUI.Label(r2, "时间", LabelStyle);
             r.y += r.height;
             if (HasDummy)
             {
@@ -125,12 +129,12 @@ namespace TestBench
         void SingleBuffLine(BuffData bd, Rect rect)
         {
             rect.width *= 0.5f;
-            GUI.Label(rect, bd.buffType.ToString(), labelStyle);
+            GUI.Label(rect, bd.buffType.ToString(), LabelStyle);
             rect.x += rect.width;
             rect.width *= 0.5f;
-            GUI.Label(rect, $"{bd.value:##0.0}/{bd.stackLayer:##0.#}", labelStyle);
+            GUI.Label(rect, $"{bd.value:##0.0}/{bd.stackLayer:##0.#}", LabelStyle);
             rect.x += rect.width;
-            GUI.Label(rect, $"{bd.excuteTime - bd.curtimer:0.0}/{bd.excuteTime:0.0}", labelStyle);
+            GUI.Label(rect, $"{bd.excuteTime - bd.curtimer:0.0}/{bd.excuteTime:0.0}", LabelStyle);
         }
 
         void TestBenchWindow(int id)
