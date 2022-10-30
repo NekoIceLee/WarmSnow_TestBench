@@ -8,50 +8,44 @@ using BepInEx;
 using BepInEx.Core;
 using HarmonyLib;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 /******************************
- * Some Note Here
- * ****************************
- * 
- * 1. Use DummyUIControl to get Damage Value.(2022/10/19) Not Done.
- * 
- * 2. Use UnityEditor to Make a New Buff Property Window instead of IMGUI.(2022/10/19) Not Done.
- * 
- * 3. Fix Weapon Support. Not Done.
- * 
- * 4. Add a Support that can Change Weapon Effects.(2022/10/19) Not Done.
- * 
- */
+* Some Note Here
+* ****************************
+* 
+* 1. Use DummyUIControl to get Damage Value.(2022/10/19) Not Done.
+* 
+* 2. Use UnityEditor to Make a New Buff Property Window instead of IMGUI.(2022/10/19) Not Done.
+* 
+* 3. Fix Weapon Support. Not Done.
+* 
+* 4. Add a Support that can Change Weapon Effects.(2022/10/19) Not Done.
+* 
+*/
 
 namespace TestBench
 {
     [BepInPlugin("com.nekoice.plugin.testbench", "TestBench", "2.0.0")]
     public class TestBench : BaseUnityPlugin
     {
-        private Rect mwdnd = new Rect(500, 300, 200, 450);
+        Rect mwdnd = new Rect(500, 300, 200, 450);
         Rect psuiwnd = new Rect(0, 0, 500, 400);
         Rect msuiwnd = new Rect(0, 0, 500, 500);
         Rect bfuiwnd = new Rect(0, 0, 400, 400);
 
         GUIStyle labelStyle = new GUIStyle();
-        private int potionid = 1;
-        private int potionlevel = 2;
-        private int msid = 1;
-        private int mslevel = 3;
-        int sbid = 0;
-        bool psuion = false;
-        bool msuion = false;
-        bool fold = true;
-        bool afterdeath = false;
-
+        private int PotionID { get; set; } = 1;
+        private int PotionLevel { get; set; } = 2;
+        private int MagicSwordID { get; set; } = 1;
+        private int MagicSwordLevel { get; set; } = 3;
+        bool HasPotionSelectUIOn { get; set; } = false;
+        bool HasMagicSwordSelectUIOn { get; set; } = false;
+        bool UI_Fold { get; set; } = true;
         int soul = 0;
-        int redsoul = 0;
-
         static int PotionsNum => Enum.GetNames(typeof(PN)).Length;
         static int WeaponsNum => Enum.GetNames(typeof(MagicSwordName)).Length;
-
-        GameObject sb;
-        bool hasgen = false;
-
+        GameObject DummyObject { get; set; }
+        bool HasDummy => DummyObject != null;
         void Start()
         {
             labelStyle.alignment = TextAnchor.MiddleCenter;
@@ -60,13 +54,14 @@ namespace TestBench
             labelStyle.font = null;
             labelStyle.margin = new RectOffset(10, 10, 10, 10);
             labelStyle.fontSize = 16;
+            SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         }
 
         void Update()
         {
             if (PlayerAnimControl.instance != null && MenuSkillLearn.instance != null)
             {
-                if (true)
+                if (HasDummy && UI_Fold == false)
                 {
                     MenuSkillLearn.instance.hasSkillRandom = false;
                     if (MenuSkillLearn.instance.isOn)
@@ -76,36 +71,37 @@ namespace TestBench
                     }
                 }
             }
+        }
 
+        private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
+        {
+            GameObject Dummy = GameObject.Find("Dummy");
+            if (Dummy != null)
+            {
+                DummyObject = Dummy;
+            }
         }
 
         void OnGUI()
         {
             mwdnd = GUI.Window("测试台".GetHashCode(), mwdnd, TestBenchWindow, "测试台");
-            if (psuion)
+            if (HasPotionSelectUIOn)
             {
-                psuiwnd = GUI.Window("圣物".GetHashCode(), psuiwnd, potionselectwindow, "圣物");
+                psuiwnd = GUI.Window("圣物".GetHashCode(), psuiwnd, PotionSelectWindow, "圣物");
             }
-            if (msuion)
+            if (HasMagicSwordSelectUIOn)
             {
-                msuiwnd = GUI.Window("武器".GetHashCode(), msuiwnd, msselectwindow, "武器");
+                msuiwnd = GUI.Window("武器".GetHashCode(), msuiwnd, MagicSwordSelectWindow, "武器");
             }
-            if (hasgen || afterdeath)
+            if (HasDummy)
             {
-                
-                bfuiwnd = GUI.Window("木桩".GetHashCode(), bfuiwnd, sandbagbufflist, "木桩");
-            }
-            if (Input.GetKey(KeyCode.L))
-            {
-                GUI.Window(4448, new Rect(0, 0, 200, 100), sbselectwindow, "sb");
+                bfuiwnd = GUI.Window("木桩".GetHashCode(), bfuiwnd, BuffListWindow, "木桩");
             }
         }
         
-        void sandbagbufflist(int id)
+        void BuffListWindow(int id)
         {
-            
             Rect r = new Rect(5, 20, bfuiwnd.width - 10, 25);
-
             Rect r2 = new Rect(r.x, r.y, r.width/2, r.height);
             GUI.Label(r2, "BUFF类型", labelStyle);
             r2.x += r2.width;
@@ -114,62 +110,44 @@ namespace TestBench
             r2.x += r2.width;
             GUI.Label(r2, "时间", labelStyle);
             r.y += r.height;
-            if (sb != null)
+            if (HasDummy)
             {
-                EnemyControl bec = sb.GetComponent<EnemyControl>();
+                EnemyControl bec = DummyObject.GetComponent<EnemyControl>();
                 foreach (BuffData buff in bec.buffAction.buffs)
                 {
-                    singlebuffline(buff, r);
+                    SingleBuffLine(buff, r);
                     r.y += r.height;
                 }
             }
             GUI.DragWindow();
         }
 
-        void singlebuffline(BuffData bd, Rect rect)
+        void SingleBuffLine(BuffData bd, Rect rect)
         {
             rect.width *= 0.5f;
             GUI.Label(rect, bd.buffType.ToString(), labelStyle);
             rect.x += rect.width;
             rect.width *= 0.5f;
-            GUI.Label(rect, bd.value.ToString("##0.0") +"/" + (bd.stackLayer).ToString("##0.#"), labelStyle);
+            GUI.Label(rect, $"{bd.value:##0.0}/{bd.stackLayer:##0.#}", labelStyle);
             rect.x += rect.width;
-            GUI.Label(rect, (bd.excuteTime - bd.curtimer).ToString("0.0") + "/" + bd.excuteTime.ToString("0.0"), labelStyle);
-        }
-
-        void singledpsline(string desc, float dps, float maxdps, Rect rect)
-        {
-            rect.width *= 0.33f;
-            GUI.Label(rect, desc, labelStyle);
-            rect.x += rect.width;
-            GUI.Label(rect, dps.ToString("0.0"), labelStyle);
-            rect.x += rect.width;
-            GUI.Label(rect, maxdps.ToString("0.0"), labelStyle);
-        }
-        void dpshead(Rect rect)
-        {
-            rect.width *= 0.33f;
-            rect.x += rect.width;
-            GUI.Label(rect, "当前: ", labelStyle);
-            rect.x += rect.width;
-            GUI.Label(rect, "最大: ", labelStyle);
+            GUI.Label(rect, $"{bd.excuteTime - bd.curtimer:0.0}/{bd.excuteTime:0.0}", labelStyle);
         }
 
         void TestBenchWindow(int id)
         {
-            if (fold || PlayerAnimControl.instance == null)
+            if (UI_Fold || PlayerAnimControl.instance == null)
             {
-                if (GUI.Button(new Rect(5, 20, 190, 30), "展开")) fold = false;
+                if (GUI.Button(new Rect(5, 20, 190, 30), "展开")) UI_Fold = false;
                 mwdnd.height = 60;
                 
             }
             else
             {
                 mwdnd.height = 400;
-                if (GUI.Button(new Rect(5, mwdnd.height-35, 190, 30), "折叠")) fold = true;
+                if (GUI.Button(new Rect(5, mwdnd.height-35, 190, 30), "折叠")) UI_Fold = true;
                 
                 Rect r = new Rect(5, 20, 140, 30);
-                if (GUI.Button(r, ((PN)potionid).ToString())) { 
+                if (GUI.Button(r, ((PN)PotionID).ToString())) { 
                     if (mwdnd.x > Screen.width / 2)
                     {
                         psuiwnd.x = mwdnd.x - psuiwnd.width;
@@ -179,18 +157,18 @@ namespace TestBench
                         psuiwnd.x = mwdnd.xMax;
                     }
                     psuiwnd.y = mwdnd.y;
-                    psuion = !psuion;
-                    msuion = false;
+                    HasPotionSelectUIOn = !HasPotionSelectUIOn;
+                    HasMagicSwordSelectUIOn = false;
                 }
                 r.Set(5, 50, 140, 30);
-                potionlevel = GUI.Toolbar(r, potionlevel, new string[] { "白", "紫", "金" });
+                PotionLevel = GUI.Toolbar(r, PotionLevel, new string[] { "白", "紫", "金" });
                 r.Set(150, 20, 45, 60);
                 if (GUI.Button(r, "->"))
                 {
-                    PotionDropPool.instance.Pop(potionid, potionlevel, PlayerAnimControl.instance.transform.position, true, true);
+                    PotionDropPool.instance.Pop(PotionID, PotionLevel, PlayerAnimControl.instance.transform.position, true, true);
                 }
                 r.Set(5, 85, 140, 30);
-                if (GUI.Button(r, ((MagicSwordName)msid).ToString()))
+                if (GUI.Button(r, ((MagicSwordName)MagicSwordID).ToString()))
                 {
                     if (mwdnd.x > Screen.width / 2)
                     {
@@ -201,16 +179,16 @@ namespace TestBench
                         msuiwnd.x = mwdnd.xMax;
                     }
                     msuiwnd.y = mwdnd.y;
-                    msuion = !msuion;
-                    psuion = false;
+                    HasMagicSwordSelectUIOn = !HasMagicSwordSelectUIOn;
+                    HasPotionSelectUIOn = false;
                 }
                 r.Set(5, 115, 140, 30);
-                mslevel = GUI.Toolbar(r, mslevel, new string[] { "白", "蓝", "金", "红" });
+                MagicSwordLevel = GUI.Toolbar(r, MagicSwordLevel, new string[] { "白", "蓝", "金", "红" });
                 r.Set(150, 85, 45, 60);
                 if (GUI.Button(r, "->"))
                 {
-                    List<MagicSwordEntry> list = MagicSwordControl.instance.RandomEntrys((MagicSwordName)msid, mslevel);
-                    MagicSwordPool.instance.Pop(msid, mslevel, list, PlayerAnimControl.instance.transform.position, true, true);
+                    List<MagicSwordEntry> list = MagicSwordControl.instance.RandomEntrys((MagicSwordName)MagicSwordID, MagicSwordLevel);
+                    MagicSwordPool.instance.Pop(MagicSwordID, MagicSwordLevel, list, PlayerAnimControl.instance.transform.position, true, true);
                 }
                 r.Set(5, 150, 90, 30);
                 if (GUI.Button(r, "普通书")) SkillDropPool.instance.Pop(PlayerAnimControl.instance.transform.position, false, true);
@@ -221,10 +199,9 @@ namespace TestBench
                 r.Set(150, 185, 45, 30);
                 if (GUI.Button(r, "魂")) PlayerAnimControl.instance.Souls = soul;
                 r.Set(5, 215, 140, 30);
-                redsoul = int.Parse(GUI.TextField(r, PlayerAnimControl.instance.RedSouls.ToString()));
+                GUI.TextField(r, PlayerAnimControl.instance.RedSouls.ToString());
                 r.Set(150, 215, 45, 30);
-                if (GUI.Button(r, "红魂")) { }//PlayerAnimControl.instance.RedSouls = redsoul;
-
+                if (GUI.Button(r, "红魂")) { }
                 r.Set(5, 250, 190, 30);
                 if (GUI.Button(r, "清除小怪 (Z)") || Input.GetKeyDown(KeyCode.Z))
                 {
@@ -234,7 +211,7 @@ namespace TestBench
             GUI.DragWindow();
         }
 
-        void potionselectwindow(int id)
+        void PotionSelectWindow(int id)
         {
             string[] s = new string[PotionsNum];
             for (int i = 1; i <= PotionsNum - 1; i++)
@@ -251,21 +228,15 @@ namespace TestBench
 
             }
             s[0] = "随机";
-            potionid = GUILayout.SelectionGrid(potionid, s, 3);
+            PotionID = GUILayout.SelectionGrid(PotionID, s, 3);
             if (GUI.changed)
             {
-                psuion = false;
+                HasPotionSelectUIOn = false;
             }
             GUI.DragWindow();
         }
 
-        void sbselectwindow(int id)
-        {
-            sbid = (int)GUILayout.HorizontalSlider(sbid, 0, 86);
-            GUILayout.Label(sbid.ToString());
-        }
-        
-        void msselectwindow(int id)
+        void MagicSwordSelectWindow(int id)
         {
             string[] s = new string[WeaponsNum];
             for (int i = 1; i <= WeaponsNum - 1; i++)
@@ -275,15 +246,13 @@ namespace TestBench
                 s[i] = TextControl.instance.MagicSwordInfo(ms)[0];
             }
             s[0] = "随机";
-            msid = GUILayout.SelectionGrid(msid, s, 3);
+            MagicSwordID = GUILayout.SelectionGrid(MagicSwordID, s, 3);
             if (GUI.changed)
             {
-                msuion = false;
+                HasMagicSwordSelectUIOn = false;
             }
             GUI.DragWindow();
         }
-
-        
 
     }
 
