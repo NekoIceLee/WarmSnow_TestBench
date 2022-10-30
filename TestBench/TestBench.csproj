@@ -34,17 +34,15 @@
     <Reference Include="0Harmony">
       <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Core">
       <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\BepInEx\core\BepInEx.Core.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Unity">
       <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\BepInEx\core\BepInEx.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="ExtraDifficulty">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\BepInEx\plugins\ExtraDifficulty.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,37 +52,208 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.dll</HintPath>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Managed\UnityEngine.IMGUIModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Managed\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    <Reference Include="UnityEngine.InputModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Managed\UnityEngine.InputModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    <Reference Include="UnityEngine.TextCoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Managed\UnityEngine.TextCoreModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Managed\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TextCoreModule">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.TextCoreModule.dll</HintPath>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>D:\Program Files\Steam\steamapps\common\WarmSnow\WarmSnow_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TestBench.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="core\0Harmony.dll" />
+    <None Include="core\BepInEx.Core.dll" />
+    <None Include="core\BepInEx.Core.xml" />
+    <None Include="core\BepInEx.Preloader.Core.dll" />
+    <None Include="core\BepInEx.Preloader.Core.xml" />
+    <None Include="core\BepInEx.Preloader.Unity.dll" />
+    <None Include="core\BepInEx.Preloader.Unity.xml" />
+    <None Include="core\BepInEx.Unity.dll" />
+    <None Include="core\BepInEx.Unity.xml" />
+    <None Include="core\Mono.Cecil.dll" />
+    <None Include="core\Mono.Cecil.Mdb.dll" />
+    <None Include="core\Mono.Cecil.Pdb.dll" />
+    <None Include="core\Mono.Cecil.Rocks.dll" />
+    <None Include="core\MonoMod.RuntimeDetour.dll" />
+    <None Include="core\MonoMod.Utils.dll" />
+    <None Include="core\SemanticVersioning.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assembly-CSharp.dll" />
+    <Content Include="Managed\Accessibility.dll" />
+    <Content Include="Managed\AstarPathfindingProject.dll" />
+    <Content Include="Managed\BehaviorDesigner.Runtime.dll" />
+    <Content Include="Managed\DemiLib.dll" />
+    <Content Include="Managed\DOTween.dll" />
+    <Content Include="Managed\DOTweenPro.dll" />
+    <Content Include="Managed\Microsoft.CSharp.dll" />
+    <Content Include="Managed\Mono.Data.Sqlite.dll" />
+    <Content Include="Managed\Mono.Posix.dll" />
+    <Content Include="Managed\Mono.Security.dll" />
+    <Content Include="Managed\Mono.WebBrowser.dll" />
+    <Content Include="Managed\mscorlib.dll" />
+    <Content Include="Managed\netstandard.dll" />
+    <Content Include="Managed\Newtonsoft.Json.dll" />
+    <Content Include="Managed\Novell.Directory.Ldap.dll" />
+    <Content Include="Managed\Pathfinding.ClipperLib.dll" />
+    <Content Include="Managed\Pathfinding.Ionic.Zip.Reduced.dll" />
+    <Content Include="Managed\Pathfinding.Poly2Tri.dll" />
+    <Content Include="Managed\Purchasing.Common.dll" />
+    <Content Include="Managed\Rewired_Core.dll" />
+    <Content Include="Managed\Rewired_Windows.dll" />
+    <Content Include="Managed\spine-unity.dll" />
+    <Content Include="Managed\System.ComponentModel.Composition.dll" />
+    <Content Include="Managed\System.ComponentModel.DataAnnotations.dll" />
+    <Content Include="Managed\System.Configuration.dll" />
+    <Content Include="Managed\System.Core.dll" />
+    <Content Include="Managed\System.Data.dll" />
+    <Content Include="Managed\System.Design.dll" />
+    <Content Include="Managed\System.Diagnostics.StackTrace.dll" />
+    <Content Include="Managed\System.DirectoryServices.dll" />
+    <Content Include="Managed\System.dll" />
+    <Content Include="Managed\System.Drawing.Design.dll" />
+    <Content Include="Managed\System.Drawing.dll" />
+    <Content Include="Managed\System.EnterpriseServices.dll" />
+    <Content Include="Managed\System.Globalization.Extensions.dll" />
+    <Content Include="Managed\System.IO.Compression.dll" />
+    <Content Include="Managed\System.IO.Compression.FileSystem.dll" />
+    <Content Include="Managed\System.Net.Http.dll" />
+    <Content Include="Managed\System.Numerics.dll" />
+    <Content Include="Managed\System.Runtime.Serialization.dll" />
+    <Content Include="Managed\System.Runtime.Serialization.Formatters.Soap.dll" />
+    <Content Include="Managed\System.Runtime.Serialization.Xml.dll" />
+    <Content Include="Managed\System.Security.dll" />
+    <Content Include="Managed\System.ServiceModel.Internals.dll" />
+    <Content Include="Managed\System.Transactions.dll" />
+    <Content Include="Managed\System.Web.ApplicationServices.dll" />
+    <Content Include="Managed\System.Web.dll" />
+    <Content Include="Managed\System.Web.Services.dll" />
+    <Content Include="Managed\System.Windows.Forms.dll" />
+    <Content Include="Managed\System.Xml.dll" />
+    <Content Include="Managed\System.Xml.Linq.dll" />
+    <Content Include="Managed\System.Xml.XPath.XDocument.dll" />
+    <Content Include="Managed\Unity.Analytics.DataPrivacy.dll" />
+    <Content Include="Managed\Unity.InputSystem.dll" />
+    <Content Include="Managed\Unity.Mathematics.dll" />
+    <Content Include="Managed\Unity.Postprocessing.Runtime.dll" />
+    <Content Include="Managed\Unity.Recorder.Base.dll" />
+    <Content Include="Managed\Unity.Recorder.dll" />
+    <Content Include="Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll" />
+    <Content Include="Managed\Unity.RenderPipelines.Core.Runtime.dll" />
+    <Content Include="Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll" />
+    <Content Include="Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll" />
+    <Content Include="Managed\Unity.RenderPipelines.Universal.Runtime.dll" />
+    <Content Include="Managed\Unity.RenderPipelines.Universal.Shaders.dll" />
+    <Content Include="Managed\Unity.TextMeshPro.dll" />
+    <Content Include="Managed\Unity.Timeline.dll" />
+    <Content Include="Managed\UnityEngine.AccessibilityModule.dll" />
+    <Content Include="Managed\UnityEngine.Advertisements.dll" />
+    <Content Include="Managed\UnityEngine.AIModule.dll" />
+    <Content Include="Managed\UnityEngine.AndroidJNIModule.dll" />
+    <Content Include="Managed\UnityEngine.AnimationModule.dll" />
+    <Content Include="Managed\UnityEngine.ARModule.dll" />
+    <Content Include="Managed\UnityEngine.AssetBundleModule.dll" />
+    <Content Include="Managed\UnityEngine.AudioModule.dll" />
+    <Content Include="Managed\UnityEngine.ClothModule.dll" />
+    <Content Include="Managed\UnityEngine.ClusterInputModule.dll" />
+    <Content Include="Managed\UnityEngine.ClusterRendererModule.dll" />
+    <Content Include="Managed\UnityEngine.CoreModule.dll" />
+    <Content Include="Managed\UnityEngine.CrashReportingModule.dll" />
+    <Content Include="Managed\UnityEngine.DirectorModule.dll" />
+    <Content Include="Managed\UnityEngine.dll" />
+    <Content Include="Managed\UnityEngine.DSPGraphModule.dll" />
+    <Content Include="Managed\UnityEngine.GameCenterModule.dll" />
+    <Content Include="Managed\UnityEngine.GIModule.dll" />
+    <Content Include="Managed\UnityEngine.GridModule.dll" />
+    <Content Include="Managed\UnityEngine.HotReloadModule.dll" />
+    <Content Include="Managed\UnityEngine.ImageConversionModule.dll" />
+    <Content Include="Managed\UnityEngine.IMGUIModule.dll" />
+    <Content Include="Managed\UnityEngine.InputLegacyModule.dll" />
+    <Content Include="Managed\UnityEngine.InputModule.dll" />
+    <Content Include="Managed\UnityEngine.JSONSerializeModule.dll" />
+    <Content Include="Managed\UnityEngine.LocalizationModule.dll" />
+    <Content Include="Managed\UnityEngine.Monetization.dll" />
+    <Content Include="Managed\UnityEngine.ParticleSystemModule.dll" />
+    <Content Include="Managed\UnityEngine.PerformanceReportingModule.dll" />
+    <Content Include="Managed\UnityEngine.Physics2DModule.dll" />
+    <Content Include="Managed\UnityEngine.PhysicsModule.dll" />
+    <Content Include="Managed\UnityEngine.ProfilerModule.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.AppleCore.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.AppleMacosStub.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.AppleStub.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.Codeless.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.SecurityCore.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.SecurityStub.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.Stores.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.WinRTCore.dll" />
+    <Content Include="Managed\UnityEngine.Purchasing.WinRTStub.dll" />
+    <Content Include="Managed\UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll" />
+    <Content Include="Managed\UnityEngine.ScreenCaptureModule.dll" />
+    <Content Include="Managed\UnityEngine.SharedInternalsModule.dll" />
+    <Content Include="Managed\UnityEngine.SpatialTracking.dll" />
+    <Content Include="Managed\UnityEngine.SpriteMaskModule.dll" />
+    <Content Include="Managed\UnityEngine.SpriteShapeModule.dll" />
+    <Content Include="Managed\UnityEngine.StreamingModule.dll" />
+    <Content Include="Managed\UnityEngine.SubstanceModule.dll" />
+    <Content Include="Managed\UnityEngine.SubsystemsModule.dll" />
+    <Content Include="Managed\UnityEngine.TerrainModule.dll" />
+    <Content Include="Managed\UnityEngine.TerrainPhysicsModule.dll" />
+    <Content Include="Managed\UnityEngine.TextCoreModule.dll" />
+    <Content Include="Managed\UnityEngine.TextRenderingModule.dll" />
+    <Content Include="Managed\UnityEngine.TilemapModule.dll" />
+    <Content Include="Managed\UnityEngine.TLSModule.dll" />
+    <Content Include="Managed\UnityEngine.UI.dll" />
+    <Content Include="Managed\UnityEngine.UIElementsModule.dll" />
+    <Content Include="Managed\UnityEngine.UIElementsNativeModule.dll" />
+    <Content Include="Managed\UnityEngine.UIModule.dll" />
+    <Content Include="Managed\UnityEngine.UmbraModule.dll" />
+    <Content Include="Managed\UnityEngine.UNETModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityAnalyticsModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityConnectModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityCurlModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityTestProtocolModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityWebRequestAudioModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityWebRequestModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityWebRequestTextureModule.dll" />
+    <Content Include="Managed\UnityEngine.UnityWebRequestWWWModule.dll" />
+    <Content Include="Managed\UnityEngine.VehiclesModule.dll" />
+    <Content Include="Managed\UnityEngine.VFXModule.dll" />
+    <Content Include="Managed\UnityEngine.VideoModule.dll" />
+    <Content Include="Managed\UnityEngine.VirtualTexturingModule.dll" />
+    <Content Include="Managed\UnityEngine.VRModule.dll" />
+    <Content Include="Managed\UnityEngine.WindModule.dll" />
+    <Content Include="Managed\UnityEngine.XR.LegacyInputHelpers.dll" />
+    <Content Include="Managed\UnityEngine.XRModule.dll" />
+    <Content Include="Managed\XInputDotNetPure.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
