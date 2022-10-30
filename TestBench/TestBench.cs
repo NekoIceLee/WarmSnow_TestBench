@@ -85,7 +85,6 @@ namespace TestBench
                 DummyObject = Dummy;
             }
         }
-
         void OnGUI()
         {
             mwdnd = GUI.Window("测试台".GetHashCode(), mwdnd, TestBenchWindow, "测试台");
