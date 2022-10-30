@@ -46,20 +46,8 @@ namespace TestBench
         int soul = 0;
         int redsoul = 0;
 
-        float dpstimer025 = 0;
-        float dpstimer1 = 0;
-        float dpstimer5 = 0;
-        float dps025 = 0;
-        float dps1 = 0;
-        float dps5 = 0;
-        float dpf = 0;
-        float maxdps025 = 0;
-        float maxdps1 = 0;
-        float maxdps5 = 0;
-        float maxdpf = 0;
-        float tempdps025 = 0;
-        float tempdps1 = 0;
-        float tempdps5 = 0;
+        static int PotionsNum => Enum.GetNames(typeof(PN)).Length;
+        static int WeaponsNum => Enum.GetNames(typeof(MagicSwordName)).Length;
 
         GameObject sb;
         bool hasgen = false;
@@ -117,18 +105,7 @@ namespace TestBench
         {
             
             Rect r = new Rect(5, 20, bfuiwnd.width - 10, 25);
-            dpshead(r);
-            r.y += r.height;
-            singledpsline("DPS(0.25s): ", dps025, maxdps025, r);
-            r.y += r.height;
-            singledpsline("DPS(1s): ", dps1, maxdps1, r);
-            r.y += r.height;
-            singledpsline("DPS(5s): ", dps5, maxdps5, r);
-            r.y += r.height;
-            singledpsline("DPF: ", dpf, maxdpf, r);
-            r.y += r.height;
-            if (GUI.Button(r, "重置数据")) { maxdpf = 0; maxdps025 = 0; maxdps1 = 0; maxdps5 = 0; }
-            r.y += r.height;
+
             Rect r2 = new Rect(r.x, r.y, r.width/2, r.height);
             GUI.Label(r2, "BUFF类型", labelStyle);
             r2.x += r2.width;
@@ -259,8 +236,8 @@ namespace TestBench
 
         void potionselectwindow(int id)
         {
-            string[] s = new string[(int)PN.SpiritJade + 1];
-            for (int i = 1; i <= (int)PN.SpiritJade; i++)
+            string[] s = new string[PotionsNum];
+            for (int i = 1; i <= PotionsNum - 1; i++)
             {
                 //Potion p = new Potion();
                 //p.PotionName = ((PN)i);
@@ -290,8 +267,8 @@ namespace TestBench
         
         void msselectwindow(int id)
         {
-            string[] s = new string[(int)MagicSwordName.ShuangSheng + 1];
-            for (int i = 1; i <= (int)MagicSwordName.ShuangSheng; i++)
+            string[] s = new string[WeaponsNum];
+            for (int i = 1; i <= WeaponsNum - 1; i++)
             {
                 MagicSword ms = new MagicSword();
                 ms.magicSwordName = ((MagicSwordName)i);
@@ -305,6 +282,8 @@ namespace TestBench
             }
             GUI.DragWindow();
         }
+
+        
 
     }
 
