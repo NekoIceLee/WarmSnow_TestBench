@@ -58,7 +58,6 @@ namespace TestBench
         bool HasDummy => DummyObject != null;
         void Start()
         {
-            
             SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         }
 
@@ -104,36 +103,15 @@ namespace TestBench
         
         void BuffListWindow(int id)
         {
-            Rect r = new Rect(5, 20, buffWindowRect.width - 10, 25);
-            Rect r2 = new Rect(r.x, r.y, r.width/2, r.height);
-            GUI.Label(r2, "BUFF类型", LabelStyle);
-            r2.x += r2.width;
-            r2.width *= 0.5f;
-            GUI.Label(r2, "值/层数", LabelStyle);
-            r2.x += r2.width;
-            GUI.Label(r2, "时间", LabelStyle);
-            r.y += r.height;
-            if (HasDummy)
+            if (HasDummy || !UI_Fold)
             {
                 EnemyControl bec = DummyObject.GetComponent<EnemyControl>();
                 foreach (BuffData buff in bec.buffAction.buffs)
                 {
-                    SingleBuffLine(buff, r);
-                    r.y += r.height;
+                    GUILayout.Label($"{new ModBuffData(buff)}", LabelStyle);
                 }
             }
             GUI.DragWindow();
-        }
-
-        void SingleBuffLine(BuffData bd, Rect rect)
-        {
-            rect.width *= 0.5f;
-            GUI.Label(rect, bd.buffType.ToString(), LabelStyle);
-            rect.x += rect.width;
-            rect.width *= 0.5f;
-            GUI.Label(rect, $"{bd.value:##0.0}/{bd.stackLayer:##0.#}", LabelStyle);
-            rect.x += rect.width;
-            GUI.Label(rect, $"{bd.excuteTime - bd.curtimer:0.0}/{bd.excuteTime:0.0}", LabelStyle);
         }
 
         void TestBenchWindow(int id)
@@ -257,6 +235,19 @@ namespace TestBench
             GUI.DragWindow();
         }
 
+    }
+
+    public class ModBuffData
+    {
+        readonly BuffData _buff;
+        public ModBuffData(BuffData buff)
+        {
+            _buff = buff;
+        }
+        public override string ToString()
+        {
+            return $"类型：{_buff.buffType,32} 值/层数：{_buff.value,12:##0.0}/{_buff.stackLayer,3:##0.#} 时间：{_buff.excuteTime - _buff.curtimer,6:0.0}/{_buff.excuteTime,6:0.0}";
+        }
     }
 
 }
