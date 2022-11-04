@@ -105,6 +105,7 @@ namespace TestBench
         {
             if (HasDummy || !UI_Fold)
             {
+                GUILayout.Label(ModBuffData.BuffHeader, LabelStyle);
                 EnemyControl bec = DummyObject.GetComponent<EnemyControl>();
                 foreach (BuffData buff in bec.buffAction.buffs)
                 {
@@ -244,9 +245,10 @@ namespace TestBench
         {
             _buff = buff;
         }
+        public static string BuffHeader => $"{"类型:",-20}{"值/层数：",-20}{"时间：",-15}";
         public override string ToString()
         {
-            return $"类型：{_buff.buffType,32} 值/层数：{_buff.value,12:##0.0}/{_buff.stackLayer,3:##0.#} 时间：{_buff.excuteTime - _buff.curtimer,6:0.0}/{_buff.excuteTime,6:0.0}";
+            return $"{_buff.buffType,-20}{($"{_buff.value,-1:##0.0}/{_buff.stackLayer,-1:##0.#}"),-20}{$"{_buff.excuteTime - _buff.curtimer,6:0.0}/{_buff.excuteTime,6:0.0}",-15}";
         }
     }
 
