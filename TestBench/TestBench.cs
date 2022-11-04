@@ -28,10 +28,10 @@ namespace TestBench
     [BepInPlugin("com.nekoice.plugin.testbench", "TestBench", "2.0.0")]
     public class TestBench : BaseUnityPlugin
     {
-        Rect mwdnd = new Rect(500, 300, 200, 450);
-        Rect psuiwnd = new Rect(0, 0, 500, 400);
-        Rect msuiwnd = new Rect(0, 0, 500, 500);
-        Rect bfuiwnd = new Rect(0, 0, 400, 400);
+        Rect mainWindowRect  = new Rect(500, 300, 200, 450);
+        Rect potionSelectWindowRect  = new Rect(0, 0, 500, 400);
+        Rect magicSworwSelectWindowRect = new Rect(0, 0, 500, 500);
+        Rect buffWindowRect  = new Rect(0, 0, 400, 400);
         GUIStyle LabelStyle { get; } = new GUIStyle()
         {
             alignment = TextAnchor.MiddleCenter,
@@ -87,24 +87,24 @@ namespace TestBench
         }
         void OnGUI()
         {
-            mwdnd = GUI.Window("测试台".GetHashCode(), mwdnd, TestBenchWindow, "测试台");
+            mainWindowRect = GUI.Window("测试台".GetHashCode(), mainWindowRect, TestBenchWindow, "测试台");
             if (HasPotionSelectUIOn)
             {
-                psuiwnd = GUI.Window("圣物".GetHashCode(), psuiwnd, PotionSelectWindow, "圣物");
+                potionSelectWindowRect = GUI.Window("圣物".GetHashCode(), potionSelectWindowRect, PotionSelectWindow, "圣物");
             }
             if (HasMagicSwordSelectUIOn)
             {
-                msuiwnd = GUI.Window("武器".GetHashCode(), msuiwnd, MagicSwordSelectWindow, "武器");
+                magicSworwSelectWindowRect = GUI.Window("武器".GetHashCode(), magicSworwSelectWindowRect, MagicSwordSelectWindow, "武器");
             }
             if (HasDummy)
             {
-                bfuiwnd = GUI.Window("木桩".GetHashCode(), bfuiwnd, BuffListWindow, "木桩");
+                buffWindowRect = GUI.Window("木桩".GetHashCode(), buffWindowRect, BuffListWindow, "木桩");
             }
         }
         
         void BuffListWindow(int id)
         {
-            Rect r = new Rect(5, 20, bfuiwnd.width - 10, 25);
+            Rect r = new Rect(5, 20, buffWindowRect.width - 10, 25);
             Rect r2 = new Rect(r.x, r.y, r.width/2, r.height);
             GUI.Label(r2, "BUFF类型", LabelStyle);
             r2.x += r2.width;
@@ -141,25 +141,25 @@ namespace TestBench
             if (UI_Fold || PlayerAnimControl.instance == null)
             {
                 if (GUI.Button(new Rect(5, 20, 190, 30), "展开")) UI_Fold = false;
-                mwdnd.height = 60;
+                mainWindowRect.height = 60;
                 
             }
             else
             {
-                mwdnd.height = 400;
-                if (GUI.Button(new Rect(5, mwdnd.height-35, 190, 30), "折叠")) UI_Fold = true;
+                mainWindowRect.height = 400;
+                if (GUI.Button(new Rect(5, mainWindowRect.height-35, 190, 30), "折叠")) UI_Fold = true;
                 
                 Rect r = new Rect(5, 20, 140, 30);
                 if (GUI.Button(r, ((PN)PotionID).ToString())) { 
-                    if (mwdnd.x > Screen.width / 2)
+                    if (mainWindowRect.x > Screen.width / 2)
                     {
-                        psuiwnd.x = mwdnd.x - psuiwnd.width;
+                        potionSelectWindowRect.x = mainWindowRect.x - potionSelectWindowRect.width;
                     }
                     else
                     {
-                        psuiwnd.x = mwdnd.xMax;
+                        potionSelectWindowRect.x = mainWindowRect.xMax;
                     }
-                    psuiwnd.y = mwdnd.y;
+                    potionSelectWindowRect.y = mainWindowRect.y;
                     HasPotionSelectUIOn = !HasPotionSelectUIOn;
                     HasMagicSwordSelectUIOn = false;
                 }
@@ -173,15 +173,15 @@ namespace TestBench
                 r.Set(5, 85, 140, 30);
                 if (GUI.Button(r, ((MagicSwordName)MagicSwordID).ToString()))
                 {
-                    if (mwdnd.x > Screen.width / 2)
+                    if (mainWindowRect.x > Screen.width / 2)
                     {
-                        msuiwnd.x = mwdnd.x - msuiwnd.width;
+                        magicSworwSelectWindowRect.x = mainWindowRect.x - magicSworwSelectWindowRect.width;
                     }
                     else
                     {
-                        msuiwnd.x = mwdnd.xMax;
+                        magicSworwSelectWindowRect.x = mainWindowRect.xMax;
                     }
-                    msuiwnd.y = mwdnd.y;
+                    magicSworwSelectWindowRect.y = mainWindowRect.y;
                     HasMagicSwordSelectUIOn = !HasMagicSwordSelectUIOn;
                     HasPotionSelectUIOn = false;
                 }
