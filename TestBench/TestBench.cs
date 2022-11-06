@@ -403,6 +403,10 @@ namespace TestBench
         }
         void MagicSwordSelectWindow(int id)
         {
+            if (HasMagicSwordSeletctUIOn == false)
+            {
+                return;
+            }
             string[] s = new string[WeaponsNum];
             for (int i = 1; i <= WeaponsNum - 1; i++)
             {
