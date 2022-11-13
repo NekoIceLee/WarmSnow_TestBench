@@ -9,6 +9,7 @@ using BepInEx.Core;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 using Epic.OnlineServices;
 using JetBrains.Annotations;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -34,7 +35,7 @@ namespace TestBench
         Rect mainWindowRect = new Rect(new Vector2(500, 300), MainGUISize.WindowSize);
         Rect potionSelectWindowRect  = new Rect(0, 0, 500, 600);
         Rect magicSwordSelectWindowRect = new Rect(0, 0, 500, 500);
-        Rect magicSworwGenerateWindowRect = new Rect(0, 0, 200, 500);
+        Rect magicSworwGenerateWindowRect = new Rect(0, 0, 200, 320);
         Rect magicSworwEntrySelectWindowRect = new Rect(0, 0, 500, 500);
         Rect buffWindowRect  = new Rect(0, 0, 400, 400);
         GUIStyle LabelStyle { get; } = new GUIStyle()
@@ -123,6 +124,13 @@ namespace TestBench
         void Start()
         {
             SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+            Logger.LogInfo(UserCustomMagicSwordControl.Instance.ToString());
+            UserCustomMagicSwordControl.Instance.LogInfo += MSControl_Loginfo;
+        }
+
+        private void MSControl_Loginfo(string info)
+        {
+            Logger.LogInfo(info);
         }
 
         void Update()
@@ -163,6 +171,15 @@ namespace TestBench
             }
             if (HasDummy && !UI_Fold)
             {
+                if (mainWindowRect.x > Screen.width / 2)
+                {
+                    buffWindowRect.x = mainWindowRect.x - buffWindowRect.width;
+                }
+                else
+                {
+                    buffWindowRect.x = mainWindowRect.xMax;
+                }
+                buffWindowRect.y = mainWindowRect.y;
                 buffWindowRect = GUI.Window("木桩".GetHashCode(), buffWindowRect, BuffListWindow, "木桩");
             }
             if (HasMagicSwordSeletctUIOn)
@@ -184,11 +201,10 @@ namespace TestBench
         {
             if (HasDummy && !UI_Fold)
             {
-                GUILayout.Label(ModBuffData.BuffHeader, BuffLabelStyle);
                 EnemyControl bec = DummyObject.GetComponent<EnemyControl>();
                 foreach (BuffData buff in bec.buffAction.buffs)
                 {
-                    GUILayout.Label($"{new ModBuffData(buff)}", BuffLabelStyle);
+                    GUILayout.Label($"{new ModBuffData(buff)}", LabelStyle);
                 }
             }
             GUI.DragWindow();
@@ -232,6 +248,11 @@ namespace TestBench
                             }
                             magicSworwGenerateWindowRect.y = mainWindowRect.y;
                             HasMagicSwordGenerateUIOn = !HasMagicSwordGenerateUIOn;
+                            if (HasMagicSwordGenerateUIOn == false)
+                            {
+                                HasMagicSwordSeletctUIOn = false;
+                                HasMagicSwordEntrySeletctUIOn = false;
+                            }
                             HasPotionSelectUIOn = false;
                         }
                     }
@@ -251,6 +272,8 @@ namespace TestBench
                             potionSelectWindowRect.y = mainWindowRect.y;
                             HasPotionSelectUIOn = !HasPotionSelectUIOn;
                             HasMagicSwordGenerateUIOn = false;
+                            HasMagicSwordSeletctUIOn = false;
+                            HasMagicSwordEntrySeletctUIOn = false;
                         }
                         PotionLevel = GUI.Toolbar(new Rect(0, MainGUISize.VerticalUnit, MainGUISize.SplitWidth(9), MainGUISize.VerticalUnit), PotionLevel, new string[] { "白", "紫", "金" });
                         if (GUI.Button(new Rect(MainGUISize.SplitWidth(9), 0, MainGUISize.SplitWidth(3), MainGUISize.VerticalUnit * 2), "->"))
@@ -326,7 +349,7 @@ namespace TestBench
 
         void MagicSwordGenerateWindow(int id)
         {
-            GUILayout.BeginArea(new Rect(0, 0, MainGUISize.UseableRect.width, MainGUISize.UseableRect.height));
+            GUILayout.BeginArea(new Rect(10, 20, MainGUISize.UseableRect.width, MainGUISize.UseableRect.height));
             {
                 GUILayout.BeginArea(new Rect(0, 0, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
                 {
@@ -348,21 +371,15 @@ namespace TestBench
 
                 GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
                 {
-                    UserCustomMagicSwordControl.Instance.MagicSwordLevel = GUI.Toolbar(new Rect(0, 0, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit), 
+                    UserCustomMagicSwordControl.Instance.MagicSwordLevel = GUI.Toolbar(new Rect(0, 0, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit),
                         UserCustomMagicSwordControl.Instance.MagicSwordLevel, new string[] { "白", "蓝", "金", "红" });
                 }
                 GUILayout.EndArea();
 
                 GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 2, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
                 {
-                    GUILayout.BeginHorizontal();
-                    {
-                        UserCustomMagicSwordControl.Instance.EnableNightmareLevel = GUI.Toggle( new Rect(0,0,MainGUISize.SplitWidth(6), MainGUISize.VerticalUnit), 
-                            UserCustomMagicSwordControl.Instance.EnableNightmareLevel, "梦魇等级", LabelStyle);
-                        UserCustomMagicSwordControl.Instance.IsNightmare = GUI.Toggle(new Rect(MainGUISize.SplitWidth(6), 0, MainGUISize.SplitWidth(6), MainGUISize.VerticalUnit), 
-                            UserCustomMagicSwordControl.Instance.IsNightmare, "梦魇剑", LabelStyle);
-                    }
-                    GUILayout.EndHorizontal();
+                    UserCustomMagicSwordControl.Instance.EnableNightmareLevel = GUILayout.Toggle(
+                        UserCustomMagicSwordControl.Instance.EnableNightmareLevel, "梦魇等级");
                 }
                 GUILayout.EndArea();
 
@@ -379,16 +396,24 @@ namespace TestBench
                 }
                 GUILayout.EndArea();
 
-                GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 4, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit * 4));
+                int voffset = 0;
+                string[] temp = new string[] { };
+                try
                 {
-                    foreach(var str in UserCustomMagicSwordControl.Instance.StrCurrentEntries)
-                    {
-                        GUILayout.Label(str, BuffLabelStyle);
-                    }
+                    temp = UserCustomMagicSwordControl.Instance.StrCurrentEntries.ToArray();
                 }
-                GUILayout.EndArea();
+                catch
+                {
 
-                GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 8, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
+                }
+                foreach (var str in temp)
+                {
+                    GUI.Label(new Rect(0, MainGUISize.VerticalUnit * (voffset + 4), MainGUISize.UseableRect.width, MainGUISize.VerticalUnit),
+                        str, BuffLabelStyle);
+                    voffset++;
+                }
+
+                GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 9, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
                 {
                     if (GUI.Button(new Rect(0, 0, MainGUISize.SplitWidth(12), MainGUISize.VerticalUnit), "生成"))
                     {
@@ -420,11 +445,12 @@ namespace TestBench
             UserCustomMagicSwordControl.Instance.MagicSwordID = GUILayout.SelectionGrid(UserCustomMagicSwordControl.Instance.MagicSwordID, s, 3);
             if (GUI.changed)
             {
-                HasMagicSwordGenerateUIOn = false;
+                HasMagicSwordSeletctUIOn = false;
             }
             GUI.DragWindow();
         }
 
+        private Vector2 scrollViewVector2 = Vector2.zero;
         void MagicSwordEntrySelectWindow(int id)
         {
             if (HasMagicSwordEntrySeletctUIOn == false)
@@ -439,10 +465,13 @@ namespace TestBench
                     magicSwordEntryName = (MagicSwordEntryName)i,
                     values = 0,
                 };
-                s[i] = TextControl.instance.MagicSwordEntryDescribe(entry).Split('+').First().Split('-').First();
+                s[i] = ((int)entry.magicSwordEntryName >= 24 ? "梦魇：" : "") + TextControl.instance.MagicSwordEntryDescribe(entry).Split('+').First().Split('-').First();
             }
             s[MSEntriesNum] = "随机";
-            MagicSwordEntryID = GUILayout.SelectionGrid(MagicSwordEntryID, s, 3);
+
+            scrollViewVector2 = GUI.BeginScrollView(new Rect(0, 0, 500, 500), scrollViewVector2, new Rect(0, 0, 500, 2000));
+            MagicSwordEntryID = GUILayout.SelectionGrid(MagicSwordEntryID, s, 1);
+            GUI.EndScrollView();
             if (GUI.changed)
             {
                 int entryindex = MagicSwordEntryID;
@@ -450,6 +479,9 @@ namespace TestBench
                 {
                     entryindex = GlobalParameter.instance.SysRand.Next(0, MSEntriesNum);
                 }
+
+                string logHandler = $"{entryindex}";
+                Logger.LogInfo(logHandler);
                 UserCustomMagicSwordControl.Instance.AddMagicSwordEntry((MagicSwordEntryName)entryindex);
             }
             GUI.DragWindow();
@@ -460,8 +492,8 @@ namespace TestBench
         void TransportSelectionWindow(int id)
         {
             int temp = 0;
-            scrollViewVector = GUI.BeginScrollView(new Rect(0, 0, 300, 600), scrollViewVector, new Rect(0, 0, 300, 2000));
-            temp = GUILayout.SelectionGrid(temp, TransportControl.Instance.SceneNameList.ToArray(), 1);
+            scrollViewVector = GUI.BeginScrollView(new Rect(10, 20, 280, 580), scrollViewVector, new Rect(0, 0, 260, 10000));
+            temp = GUI.SelectionGrid(new Rect(0,0,260, 9000),temp, TransportControl.Instance.SceneNameList.ToArray(), 1);
             GUI.EndScrollView();
             if (GUI.changed)
             {
@@ -502,26 +534,38 @@ namespace TestBench
         {
             return $"{_buff.buffType,-20}{($"{_buff.value,-1:##0.0}/{_buff.stackLayer,-1:##0.#}"),-20}{$"{_buff.excuteTime - _buff.curtimer,6:0.0}/{_buff.excuteTime,6:0.0}",-15}";
         }
+        public string StrBuffType => $"{_buff.buffType}";
+        public string StrBuffValue => $"{_buff.value,-1:##0.0}/{_buff.stackLayer,-1:##0.#}";
+        public string StrBuffTime => $"{_buff.excuteTime - _buff.curtimer,6:0.0}/{_buff.excuteTime,6:0.0}";
     }
 
     public class TransportControl
     {
         public static TransportControl Instance { get; } = new TransportControl();
         public List<Scene> Scenes { get; private set; } = new List<Scene>(EnumScene());
+        public List<string> ScenePaths { get; private set; } = new List<string>(EnumScenePath());
         public List<string> SceneNameList
         {
             get
             {
                 List<string> ret = new List<string>();
-                Scenes.ForEach(sc => ret.Add(sc.name));
+                ScenePaths.ForEach(sc => ret.Add(sc.Split('/').Last().Split('.').First()));
                 return ret;
             }
         }
         public static IEnumerable<Scene> EnumScene()
         {
-            for (int i = 0; i < SceneManager.sceneCount; i++)
+            foreach(var path in EnumScenePath())
             {
-                yield return SceneManager.GetSceneAt(i);
+                yield return SceneManager.GetSceneByPath(path);
+            }
+            yield break;
+        }
+        public static IEnumerable<string> EnumScenePath()
+        {
+            for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+            {
+                yield return SceneUtility.GetScenePathByBuildIndex(i);
             }
             yield break;
         }
@@ -541,67 +585,73 @@ namespace TestBench
 
     public class UserCustomMagicSwordControl
     {
-        public static UserCustomMagicSwordControl Instance { get; } = new UserCustomMagicSwordControl();
+        public static UserCustomMagicSwordControl Instance = new UserCustomMagicSwordControl();
+        public delegate void LogInfoHandler(string info);
+        public event LogInfoHandler LogInfo;
+        public UserCustomMagicSwordControl()
+        {
+            
+        }
         public int GetNightmareLevel(MagicSwordEntryName name)
         {
             if (EnableNightmareLevel == false) return 0;
-            if (name < MagicSwordEntryName.nightmareDmgUp) return 0;
-            if (name <= MagicSwordEntryName.nightmareQuadrupleDamage) return 1;
-            if (name <= MagicSwordEntryName.nightmareCritical) return 2;
+            if ((int)name < 24) return 0;//(int)MagicSwordEntryName.nightmareDmgUp
+            if ((int)name <= 39) return 1;//(int)MagicSwordEntryName.nightmareQuadrupleDamage
+            if ((int)name <= 48) return 2;//(int)MagicSwordEntryName.nightmareCritical
             return 3;
         }
-        public int GetMagicSwordEntryMaxValue(MagicSwordEntryName name)
+        public float GetMagicSwordEntryMaxValue(MagicSwordEntryName name)
         {
             switch (name)
             {
                 case MagicSwordEntryName.meeleDamage:
-                    return 30;
+                    return 30f / 100;
                 case MagicSwordEntryName.bladeBoltDamage:
-                    return 30;
+                    return 30f / 100; ;
                 case MagicSwordEntryName.damage:
-                    return 25;
+                    return 25f / 100; ;
                 case MagicSwordEntryName.ignoreDefense:
-                    return 30;
+                    return 30f / 100; ;
                 case MagicSwordEntryName.attackSpeed:
-                    return 40;
+                    return 40f / 100; ;
                 case MagicSwordEntryName.drawSwordCD:
-                    return 30;
+                    return 30f / 100; ;
                 case MagicSwordEntryName.poisonExtraAttack:
-                    return 40;
+                    return 40f / 100; ;
                 case MagicSwordEntryName.drunkExtraAttack:
-                    return 40;
+                    return 40f / 100; ;
                 case MagicSwordEntryName.burnExtraAttack:
-                    return 40;
+                    return 40f / 100; ;
                 case MagicSwordEntryName.bleedExtraAttack:
-                    return 40;
+                    return 40f / 100; ;
                 case MagicSwordEntryName.freezingExtraAttack:
-                    return 40;
+                    return 40f / 100; ;
                 case MagicSwordEntryName.stunExtraAttack:
-                    return 60;
+                    return 60f / 100; ;
                 case MagicSwordEntryName.moveSpeed:
-                    return 15;
+                    return 15f / 100; ;
                 case MagicSwordEntryName.superRarePotionProb:
-                    return 15;
+                    return 15f / 100; ;
                 case MagicSwordEntryName.extraSoulsRate:
-                    return 100;
+                    return 1; ;
                 case MagicSwordEntryName.extraRageTimes:
-                    return 20;
+                    return 20f / 100; ;
                 case MagicSwordEntryName.fireDamage:
-                    return 45;
+                    return 45f / 100;
                 case MagicSwordEntryName.iceDamage:
-                    return 45;
+                    return 45f / 100;
                 case MagicSwordEntryName.poisonDamage:
-                    return 45;
+                    return 45f / 100; ;
                 case MagicSwordEntryName.thunderDamage:
-                    return 45;
+                    return 45f / 100;
                 case MagicSwordEntryName.injury1:
-                    return 15;
+                    return 15f / 100; ;
                 case MagicSwordEntryName.doubleDamage:
-                    return 15;
+                    return 15f / 100; ;
                 case MagicSwordEntryName.quadrupleDamage:
-                    return 10;
+                    return 10f / 100; ;
                 case MagicSwordEntryName.injury2:
-                    return 10;
+                    return 10f / 100; ;
                 case MagicSwordEntryName.nightmareDmgUp:
                     break;
                 case MagicSwordEntryName.nightmareMeleeDmgUp:
@@ -675,10 +725,9 @@ namespace TestBench
             }
             return 0;
         }
-        public List<MagicSwordEntry> MagicSwordEntries { get; private set; }
+        public List<MagicSwordEntry> MagicSwordEntries { get; private set; } = new List<MagicSwordEntry>();
         public int MagicSwordLevel { get; set; } = 3;
         public int MagicSwordID { get; set; } = 0;
-        public bool IsNightmare { get; set; } = false;
         public bool EnableNightmareLevel { get; set; } = true;
         public bool AllowPopMagicSword => MagicSwordEntries.Count == Math.Min(MagicSwordLevel + 2, 5);
         public IEnumerable<string> StrCurrentEntries
@@ -686,45 +735,70 @@ namespace TestBench
             get
             {
                 return from entry in MagicSwordEntries
-                       select TextControl.instance.MagicSwordEntryDescribe(entry);
+                       select ((int)entry.magicSwordEntryName >= 24 ? "梦魇：":"") + TextControl.instance.MagicSwordEntryDescribe(entry);
             }
         }
-        public bool AddMagicSwordEntry(MagicSwordEntryName name, int value = -1)
+        public bool AddMagicSwordEntry(MagicSwordEntryName name, float value = -1)
         {
-            if (value < 0)
+            try
             {
-                value = GetMagicSwordEntryMaxValue(name);
+                if (value < 0)
+                {
+                    value = GetMagicSwordEntryMaxValue(name);
+                }
+                if (MagicSwordEntries.Count >= Math.Min(MagicSwordLevel + 2, 5))
+                {
+                    return false;
+                }
+                MagicSwordEntry newEntry = new MagicSwordEntry
+                {
+                    magicSwordEntryName = name,
+                    isNightmare = (int)name >= (int)MagicSwordEntryName.nightmareDmgUp,
+                    values = value,
+                    level = GetNightmareLevel(name),
+                };
+                MagicSwordEntries.Add(newEntry);
+                var sort = from entry in MagicSwordEntries
+                           orderby (int)entry.magicSwordEntryName ascending
+                           select entry;
+                MagicSwordEntries = new List<MagicSwordEntry>(sort);
+                LogInfo($"Add MSEntry{MagicSwordEntries.Count}, {name}");
             }
-            if (MagicSwordEntries.Count >= Math.Min(MagicSwordLevel + 2, 5))
+            catch(Exception ex)
             {
+                LogInfo($"On Add MS Entry: {ex.Message}\r\n{ex.StackTrace}" );
                 return false;
             }
-            MagicSwordEntry newEntry = new MagicSwordEntry
-            {
-                magicSwordEntryName = name,
-                isNightmare = name < MagicSwordEntryName.nightmareDmgUp,
-                values = value,
-                level = GetNightmareLevel(name),
-            };
-            MagicSwordEntries.Add(newEntry);
-            var sort = from entry in MagicSwordEntries
-                       orderby entry.magicSwordEntryName ascending
-                       select entry;
-            MagicSwordEntries = new List<MagicSwordEntry>(sort);
             return true;
         }
         public GameObject Pop()
         {
-            while(AllowPopMagicSword == false)
+            try
             {
-                AddMagicSwordEntry((MagicSwordEntryName)GlobalParameter.instance.SysRand.Next(0, TestBench.MSEntriesNum));
-                if (MagicSwordEntries.Count > Math.Min(MagicSwordLevel + 2, 5))
+                while (AllowPopMagicSword == false)
                 {
-                    MagicSwordEntries.Clear();
+                    AddMagicSwordEntry((MagicSwordEntryName)GlobalParameter.instance.SysRand.Next(0, TestBench.MSEntriesNum));
+                    if (MagicSwordEntries.Count > Math.Min(MagicSwordLevel + 2, 5))
+                    {
+                        MagicSwordEntries.Clear();
+                    }
+                }
+                if (MagicSwordPool.instance is null)
+                {
+                    LogInfo("MSPool is null");
+                    return null;
                 }
             }
-            if (MagicSwordPool.instance is null) return null;
-            return MagicSwordPool.instance.Pop(MagicSwordID, MagicSwordLevel, MagicSwordEntries, PlayerAnimControl.instance.transform.position, false);
+            catch (Exception ex)
+            {
+                LogInfo($"On Pop MS: {ex.Message}\r\n{ex.StackTrace}");
+                return null;
+            }
+            return MagicSwordPool.instance.Pop(MagicSwordID, MagicSwordLevel, MagicSwordEntries, PlayerAnimControl.instance.transform.position, isJump: false);
+        }
+        public override string ToString()
+        {
+            return $"{this.EnableNightmareLevel}, {this.MagicSwordID}, {this.MagicSwordLevel}";
         }
     }
 
