@@ -161,7 +161,7 @@ namespace TestBench
             {
                 magicSworwGenerateWindowRect = GUI.Window("武器".GetHashCode(), magicSworwGenerateWindowRect, MagicSwordGenerateWindow, "武器");
             }
-            if (HasDummy)
+            if (HasDummy && !UI_Fold)
             {
                 buffWindowRect = GUI.Window("木桩".GetHashCode(), buffWindowRect, BuffListWindow, "木桩");
             }
