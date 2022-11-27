@@ -148,7 +148,7 @@ namespace TestBench
                 }
             }
 
-            showtransport = Input.GetKey(KeyCode.X);
+            showtransport = Input.GetKey(KeyCode.X) && Input.GetKey(KeyCode.LeftAlt);
         }
         private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
         {
