@@ -13,17 +13,10 @@ using UnityEditor;
 using Epic.OnlineServices;
 using JetBrains.Annotations;
 using static UnityEngine.EventSystems.EventTrigger;
+using BehaviorDesigner.Runtime.Tasks.Unity.UnityTime;
 /******************************
 * Some Note Here
 * ****************************
-* 
-* 1. Use DummyUIControl to get Damage Value.(2022/10/19) Not Done.
-* 
-* 2. Use UnityEditor to Make a New Buff Property Window instead of IMGUI.(2022/10/19) Ignored.
-* 
-* 3. Fix Weapon Support. Not Done.
-* 
-* 4. Add a Support that can Change Weapon Effects.(2022/10/19) Not Done.
 * 
 */
 
@@ -111,6 +104,9 @@ namespace TestBench
                 }
             }
         }
+        float GameSpeedSet = 1;
+        List<float> GameSpeedPreset = new List<float> { 0.1f, 0.25f, 0.5f, 1, 1.5f, 2 };
+        float GameSpeedBeforePause = 1;
         bool HasPotionSelectUIOn { get; set; } = false;
         bool HasMagicSwordGenerateUIOn { get; set; } = false;
         bool HasMagicSwordSeletctUIOn { get; set; } = false;
@@ -149,6 +145,10 @@ namespace TestBench
             }
 
             showtransport = Input.GetKey(KeyCode.X) && Input.GetKey(KeyCode.LeftAlt);
+            if (GameSpeedSet != 1)
+            {
+                Time.timeScale = GameSpeedSet;
+            }
         }
         private void SceneManager_activeSceneChanged(Scene arg0, Scene arg1)
         {
@@ -300,12 +300,6 @@ namespace TestBench
                     GUILayout.EndArea();
                     GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 4, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
                     {
-                        GUI.Label(new Rect(0, 0, MainGUISize.SplitWidth(4), MainGUISize.VerticalUnit), "蓝魂");
-                        StringPlayerSoulsCount = GUI.TextField(new Rect(MainGUISize.SplitWidth(4), 0, MainGUISize.SplitWidth(8), MainGUISize.VerticalUnit), StringPlayerSoulsCount);
-                    }
-                    GUILayout.EndArea();
-                    GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 5, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
-                    {
                         if (GUI.Button(new Rect(0, 0, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit), "法印"))
                         {
                             var sealitem = NightmarePool.instance.Pop(NightmareMagicSwordPrefabType.SealDrop);
@@ -313,7 +307,63 @@ namespace TestBench
                         }
                     }
                     GUILayout.EndArea();
+                    GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 5, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
+                    {
+                        GUI.Label(new Rect(0, 0, MainGUISize.SplitWidth(4), MainGUISize.VerticalUnit), "蓝魂");
+                        StringPlayerSoulsCount = GUI.TextField(new Rect(MainGUISize.SplitWidth(4), 0, MainGUISize.SplitWidth(8), MainGUISize.VerticalUnit), StringPlayerSoulsCount);
+                    }
+                    GUILayout.EndArea();
                     GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 6, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
+                    {
+                        GUI.Label(new Rect(0, 0, MainGUISize.SplitWidth(6), MainGUISize.VerticalUnit), $"游戏速度: {(GameSpeedSet):0.##}x");
+                        string pauseplayhint = GameSpeedSet == 0 ? "D" : "H";
+                        var btnHint = new string[] {"<<", "<", pauseplayhint, ">", ">>"};
+                        var clickid = GUI.SelectionGrid(new Rect(0, MainGUISize.VerticalUnit, MainGUISize.Width, MainGUISize.VerticalUnit), -1, btnHint, 5);
+                        switch (clickid)
+                        {
+                            case 0:
+                                GameSpeedSet = GameSpeedPreset.First();
+                                break;
+                            case 1:
+                                if (GameSpeedSet == 0)
+                                {
+                                    GameSpeedSet = GameSpeedBeforePause;
+                                }
+                                if (GameSpeedSet == GameSpeedPreset.First())
+                                {
+                                    break;
+                                }
+                                GameSpeedSet = GameSpeedPreset[GameSpeedPreset.IndexOf(GameSpeedSet) - 1];
+                                break;
+                            case 2:
+                                if (GameSpeedSet == 0)
+                                {
+                                    GameSpeedSet = GameSpeedBeforePause;
+                                }
+                                else
+                                {
+                                    GameSpeedBeforePause = GameSpeedSet;
+                                    GameSpeedSet = 0;
+                                }
+                                break;
+                            case 3:
+                                if (GameSpeedSet == 0)
+                                {
+                                    GameSpeedSet = GameSpeedBeforePause;
+                                }
+                                if (GameSpeedSet == GameSpeedPreset.First())
+                                {
+                                    break;
+                                }
+                                GameSpeedSet = GameSpeedPreset[GameSpeedPreset.IndexOf(GameSpeedSet) + 1];
+                                break;
+                            case 4:
+                                GameSpeedSet = GameSpeedPreset.Last();
+                                break;
+                        }
+                    }
+                    GUILayout.EndArea();
+                    GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 8, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
                     {
                         if (GUI.Button(new Rect(0, 0, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit), "清除小怪 (Z)") || Input.GetKeyDown(KeyCode.Z))
                         {
