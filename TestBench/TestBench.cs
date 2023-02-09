@@ -212,6 +212,7 @@ namespace TestBench
 
         void TestBenchWindow(int id)
         {
+            int clickid = 0;
             if (UI_Fold || PlayerAnimControl.instance is null)
             {
                 if (PlayerAnimControl.instance is null)
@@ -313,53 +314,54 @@ namespace TestBench
                         StringPlayerSoulsCount = GUI.TextField(new Rect(MainGUISize.SplitWidth(4), 0, MainGUISize.SplitWidth(8), MainGUISize.VerticalUnit), StringPlayerSoulsCount);
                     }
                     GUILayout.EndArea();
-                    GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 6, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit));
+                    GUILayout.BeginArea(new Rect(0, MainGUISize.VerticalUnit * 6, MainGUISize.UseableRect.width, MainGUISize.VerticalUnit * 2));
                     {
-                        GUI.Label(new Rect(0, 0, MainGUISize.SplitWidth(6), MainGUISize.VerticalUnit), $"游戏速度: {(GameSpeedSet):0.##}x");
+                        GUI.Label(new Rect(0, 0, MainGUISize.Width, MainGUISize.VerticalUnit), $"游戏速度: {(GameSpeedSet):0.##}x");
                         string pauseplayhint = GameSpeedSet == 0 ? "D" : "H";
                         var btnHint = new string[] {"<<", "<", pauseplayhint, ">", ">>"};
-                        var clickid = GUI.SelectionGrid(new Rect(0, MainGUISize.VerticalUnit, MainGUISize.Width, MainGUISize.VerticalUnit), -1, btnHint, 5);
-                        switch (clickid)
+                        var split = MainGUISize.UseableRect.width / 5;
+                        if (GUI.Button(new Rect(0, MainGUISize.VerticalUnit, split, MainGUISize.VerticalUnit), "<<"))
                         {
-                            case 0:
-                                GameSpeedSet = GameSpeedPreset.First();
-                                break;
-                            case 1:
-                                if (GameSpeedSet == 0)
-                                {
-                                    GameSpeedSet = GameSpeedBeforePause;
-                                }
-                                if (GameSpeedSet == GameSpeedPreset.First())
-                                {
-                                    break;
-                                }
+                            GameSpeedSet = GameSpeedPreset.First();
+                        }
+                        if (GUI.Button(new Rect(split, MainGUISize.VerticalUnit, split, MainGUISize.VerticalUnit), "<"))
+                        {
+                            if (GameSpeedSet == 0)
+                            {
+                                GameSpeedSet = GameSpeedBeforePause;
+                            }
+                            if (GameSpeedSet != GameSpeedPreset.First())
+                            {
                                 GameSpeedSet = GameSpeedPreset[GameSpeedPreset.IndexOf(GameSpeedSet) - 1];
-                                break;
-                            case 2:
-                                if (GameSpeedSet == 0)
-                                {
-                                    GameSpeedSet = GameSpeedBeforePause;
-                                }
-                                else
-                                {
-                                    GameSpeedBeforePause = GameSpeedSet;
-                                    GameSpeedSet = 0;
-                                }
-                                break;
-                            case 3:
-                                if (GameSpeedSet == 0)
-                                {
-                                    GameSpeedSet = GameSpeedBeforePause;
-                                }
-                                if (GameSpeedSet == GameSpeedPreset.First())
-                                {
-                                    break;
-                                }
+                            }
+                        }
+                        if (GUI.Button(new Rect(split * 2, MainGUISize.VerticalUnit, split, MainGUISize.VerticalUnit), pauseplayhint))
+                        {
+                            if (GameSpeedSet == 0)
+                            {
+                                GameSpeedSet = GameSpeedBeforePause;
+                                Time.timeScale = GameSpeedBeforePause;
+                            }
+                            else
+                            {
+                                GameSpeedBeforePause = GameSpeedSet;
+                                GameSpeedSet = 0;
+                            }
+                        }
+                        if (GUI.Button(new Rect(split * 3, MainGUISize.VerticalUnit, split, MainGUISize.VerticalUnit), ">"))
+                        {
+                            if (GameSpeedSet == 0)
+                            {
+                                GameSpeedSet = GameSpeedBeforePause;
+                            }
+                            if (GameSpeedSet != GameSpeedPreset.Last())
+                            {
                                 GameSpeedSet = GameSpeedPreset[GameSpeedPreset.IndexOf(GameSpeedSet) + 1];
-                                break;
-                            case 4:
-                                GameSpeedSet = GameSpeedPreset.Last();
-                                break;
+                            }
+                        }
+                        if (GUI.Button(new Rect(split * 4, MainGUISize.VerticalUnit, split, MainGUISize.VerticalUnit), ">>"))
+                        {
+                            GameSpeedSet = GameSpeedPreset.Last();
                         }
                     }
                     GUILayout.EndArea();
@@ -374,6 +376,11 @@ namespace TestBench
                 }
                 GUILayout.EndArea();
             }
+            if (GUI.changed)
+            {
+                
+            }
+            
 
             GUI.DragWindow();
         }
