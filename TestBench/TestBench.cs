@@ -22,7 +22,7 @@ using BehaviorDesigner.Runtime.Tasks.Unity.UnityTime;
 
 namespace TestBench
 {
-    [BepInPlugin("com.nekoice.plugin.testbench", "TestBench", "2.0.0")]
+    [BepInPlugin("com.nekoice.plugin.testbench", "TestBench", "3.0.0")]
     public class TestBench : BaseUnityPlugin
     {
         Rect mainWindowRect = new Rect(new Vector2(500, 300), MainGUISize.WindowSize);
@@ -133,7 +133,7 @@ namespace TestBench
         {
             if (PlayerAnimControl.instance != null && MenuSkillLearn.instance != null)
             {
-                if (HasDummy && UI_Fold == false)
+                if (UI_Fold == false)
                 {
                     MenuSkillLearn.instance.hasSkillRandom = false;
                     if (MenuSkillLearn.instance.isOn)
@@ -385,6 +385,7 @@ namespace TestBench
             GUI.DragWindow();
         }
 
+        private Vector2 potionSelectionGUIScrollViewVector = Vector2.zero;
         void PotionSelectWindow(int id)
         {
             string[] s = new string[PotionsNum];
@@ -483,6 +484,8 @@ namespace TestBench
 
             GUI.DragWindow();
         }
+
+        private Vector2 magicSwordSelectionGUIScrollViewVector = Vector2.zero;
         void MagicSwordSelectWindow(int id)
         {
             if (HasMagicSwordSeletctUIOn == false)
@@ -499,11 +502,13 @@ namespace TestBench
                 s[i] = TextControl.instance.MagicSwordInfo(ms)[0];
             }
             s[0] = "随机";
+            magicSwordSelectionGUIScrollViewVector = GUI.BeginScrollView(new Rect(0, 20, 500, 500), magicSwordSelectionGUIScrollViewVector, new Rect(0, 0, 500, 2000));
             UserCustomMagicSwordControl.Instance.MagicSwordID = GUILayout.SelectionGrid(UserCustomMagicSwordControl.Instance.MagicSwordID, s, 3);
             if (GUI.changed)
             {
                 HasMagicSwordSeletctUIOn = false;
             }
+            GUI.EndScrollView();
             GUI.DragWindow();
         }
 
